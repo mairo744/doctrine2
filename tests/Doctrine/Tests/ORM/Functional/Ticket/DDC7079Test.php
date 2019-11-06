@@ -1,29 +1,26 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Doctrine\Tests\ORM\Functional\Ticket;
 
 use Doctrine\Common\Persistence\Mapping\RuntimeReflectionService;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
 use Doctrine\Tests\OrmFunctionalTestCase;
 
 /**
  * Class DDC7079Test
+ *
  * @group DDC-7079
- * @package Doctrine\Tests\ORM\Functional
- * @author mairo744
  */
 class DDC7079Test extends OrmFunctionalTestCase
 {
-    /**
-     * @var \Doctrine\ORM\Mapping\DefaultQuoteStrategy
-     */
+    /** @var DefaultQuoteStrategy */
     private $strategy;
 
-    /**
-     * @var \Doctrine\DBAL\Platforms\AbstractPlatform
-     */
+    /** @var AbstractPlatform */
     private $platform;
 
     /**
@@ -36,7 +33,7 @@ class DDC7079Test extends OrmFunctionalTestCase
         $this->strategy = new DefaultQuoteStrategy();
     }
 
-    public function testGetTableName ()
+    public function testGetTableName()
     {
         $table = [
             'name'=>'cms_user',
@@ -69,17 +66,17 @@ class DDC7079Test extends OrmFunctionalTestCase
         $this->assertEquals($this->getTableFullName($table), $this->strategy->getJoinTableName($cm->associationMappings['user'], $cm, $this->platform));
     }
 
-    private function getTableFullName(array $table): string
+    private function getTableFullName(array $table) : string
     {
         $join = '.';
-        if ( ! $this->platform->supportsSchemas() && $this->platform->canEmulateSchemas()) {
+        if (! $this->platform->supportsSchemas() && $this->platform->canEmulateSchemas()) {
             $join = '__';
         }
 
         return $table['schema'] . $join . $table['name'];
     }
 
-    private function createClassMetadata(string $className): ClassMetadata
+    private function createClassMetadata(string $className) : ClassMetadata
     {
         $cm = new ClassMetadata($className);
         $cm->initializeReflection(new RuntimeReflectionService());
@@ -100,9 +97,7 @@ class DDC7079CmsUser
      */
     public $id;
 
-    /**
-     * @OneToOne(targetEntity="DDC7079CmsAddress", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
-     */
+    /** @OneToOne(targetEntity="DDC7079CmsAddress", mappedBy="user", cascade={"persist"}, orphanRemoval=true) */
     public $address;
 }
 
